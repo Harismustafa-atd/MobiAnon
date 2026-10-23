@@ -4,6 +4,95 @@ MobiAnon is a full-stack React, Express, and MySQL demonstrator for exploring ex
 
 The project is designed as a research/demo tool, not a production anonymization framework. Its main goal is to make privacy-utility tradeoffs visible through maps, controls, metrics, upload workflows, sample data, benchmark scripts, and an interactive 3D privacy-utility landscape.
 
+
+---
+
+## Project Background & Research Contributions
+
+### Master's Thesis — Original Development
+
+**Haris Mustafa | University of Bamberg**
+
+MobiAnon builds upon my Master's thesis research on explainable anonymization techniques for mobility data.
+
+I developed the original interactive web demonstrator to investigate and visualize the privacy-utility trade-off in mobility datasets using spatial k-anonymity.
+
+The original demonstrator included:
+
+- Interactive visualization of original and anonymized mobility data.
+- Spatial grid-based anonymization with configurable k-values and grid sizes.
+- Side-by-side geographical comparisons of original and anonymized trip records.
+- Interactive maps, trip visualization, and geographical heatmaps.
+- Filtering of mobility data by date and rider membership type.
+- Visual exploration of how anonymization parameters affect data utility.
+
+As part of the thesis research, the demonstrator was evaluated in a user study involving **16 participants**, exploring how interactive visualizations help users understand data anonymization and its effects.
+
+**Live Thesis Demonstrator:** https://harismustafa.info/
+
+### Continued Development — MobiAnon
+
+Following the completion of my Master's thesis, the original demonstrator became the foundation for further collaborative research and development.
+
+The extended project, **MobiAnon**, integrates additional privacy-preserving techniques, data processing capabilities, interactive visualizations, and reproducible evaluation methods.
+
+The extended application includes:
+
+- Spatial and spatio-temporal k-anonymity.
+- Optional l-diversity and differential privacy mechanisms.
+- Temporal generalization for mobility records.
+- Full-stack architecture using React, Node.js, Express, and MySQL.
+- Interactive geographical maps and privacy-utility comparisons.
+- Multi-k comparison and interactive 3D privacy-utility visualization.
+- CSV dataset upload, validation, and resumable data import.
+- Quantitative utility metrics and reproducible benchmarking.
+- Evaluation using real-world Citi Bike and Hubway mobility datasets.
+
+This extension was developed through research collaboration and builds directly upon the original thesis demonstrator.
+
+### Research Publication & Conference — SKILL 2026
+
+**Paper Title:**
+
+*MobiAnon: An Interactive Demonstrator for Exploring the Privacy-Utility Trade-off in Mobility Data*
+
+**Authors:**
+
+1. Muhammad Tayyab Shafique
+2. **Haris Mustafa**
+3. Abeera Ayesha Riaz
+
+**Conference:** SKILL 2026 — Studierendenkonferenz Informatik
+
+**Location:** Dresden, Germany
+
+**Event:** Informatik Festival 2026
+
+**Research Contribution:**
+
+The paper presents MobiAnon as an interactive demonstrator for exploring privacy-preserving techniques in mobility datasets. It discusses the system architecture, anonymization pipeline, visualizations, and quantitative evaluation of the privacy-utility trade-off.
+
+The research was accepted for presentation at SKILL 2026, where the project and its findings were presented.
+
+### Project Links
+
+- **My GitHub Repository:** https://github.com/Harismustafa-atd/MobiAnon
+- **Live Master's Thesis Demonstrator:** https://harismustafa.info/
+- **Original Collaborative Repository:** https://github.com/MTayabShafique/MobiAnon
+
+### Development & Research Attribution
+
+The original Master's thesis demonstrator was developed by **Haris Mustafa** at the University of Bamberg.
+
+MobiAnon is an extended collaborative research project building upon this initial work.
+
+The research paper was co-authored by Muhammad Tayyab Shafique, Haris Mustafa, and Abeera Ayesha Riaz.
+
+This repository is maintained as a fork of the collaborative MobiAnon repository, preserving its development history and attribution to the original contributors.
+
+---
+
+
 The project supports:
 
 - Original vs anonymized map comparison.
