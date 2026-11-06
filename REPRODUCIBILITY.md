@@ -64,20 +64,37 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=bicycle_data
 ```
+## 4. Configure Database Connection
 
-If your Laragon uses different credentials, set them in `bicycle-be/.env`.
+The repository provides an environment configuration template
+at `bicycle-be/.env.example`.
 
-On macOS with MAMP, the backend auto-detects common MAMP defaults. You can also set them explicitly:
+Before running the application, create a local copy Copy-Item bicycle-be/.env.example bicycle-be/.env named
+`bicycle-be/.env`.
+
+For standard Laragon/XAMPP installations on Windows, use:
 
 ```env
 DB_HOST=localhost
-DB_PORT=8889
+DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=root
+DB_PASSWORD=
 DB_NAME=bicycle_data
+PORT=5000
 ```
 
-The backend also supports `DB_SOCKET_PATH` for local MySQL installs that expose a socket instead of TCP.
+Update these values if your MySQL installation uses
+different credentials.
+
+The `.env` file is excluded from Git and should not
+be committed to the repository.
+
+On macOS with MAMP, MySQL may use port 8889 and a
+different password. Configure these values as needed.
+
+The backend also supports `DB_SOCKET_PATH` for local
+MySQL installations using a Unix socket.
+
 
 ## 5. Load Data
 
