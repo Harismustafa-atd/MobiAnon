@@ -129,6 +129,25 @@ For setup, Laragon/MySQL instructions, database creation, data import, benchmark
 That guide is the primary source of truth for reproducing the current version of the project.
 
 ## Quick Start
+
+
+### Environment Configuration
+
+Create a local environment file using the provided
+template:
+
+`bicycle-be/.env.example` → `bicycle-be/.env`
+
+Update the database credentials in `.env` to match
+your local MySQL installation.
+
+The `.env` file is intentionally excluded from Git
+to prevent sensitive credentials from being committed.
+
+For database creation and import instructions, see
+[REPRODUCIBILITY.md](./REPRODUCIBILITY.md).
+
+
 **Prerequisite:** Configure MySQL and create the
 database using the instructions in
 [REPRODUCIBILITY.md](./REPRODUCIBILITY.md).
