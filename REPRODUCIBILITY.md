@@ -55,22 +55,17 @@ cd ..
 
 ## 4. Configure Database Connection
 
-For standard Laragon/XAMPP MySQL on Windows, no `.env` changes are usually required because the backend defaults to:
-
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=bicycle_data
-```
-## 4. Configure Database Connection
-
 The repository provides an environment configuration template
 at `bicycle-be/.env.example`.
 
-Before running the application, create a local copy Copy-Item bicycle-be/.env.example bicycle-be/.env named
+Before running the application, create a local copy named
 `bicycle-be/.env`.
+
+On Windows, open PowerShell in the repository root and run:
+
+```powershell
+Copy-Item bicycle-be/.env.example bicycle-be/.env
+```
 
 For standard Laragon/XAMPP installations on Windows, use:
 
@@ -94,6 +89,8 @@ different password. Configure these values as needed.
 
 The backend also supports `DB_SOCKET_PATH` for local
 MySQL installations using a Unix socket.
+
+
 
 
 ## 5. Load Data
