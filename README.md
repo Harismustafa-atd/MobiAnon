@@ -129,7 +129,9 @@ For setup, Laragon/MySQL instructions, database creation, data import, benchmark
 That guide is the primary source of truth for reproducing the current version of the project.
 
 ## Quick Start
-
+**Prerequisite:** Configure MySQL and create the
+database using the instructions in
+[REPRODUCIBILITY.md](./REPRODUCIBILITY.md).
 ```bash
 npm install
 cd bicycle-be
