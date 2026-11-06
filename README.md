@@ -1,28 +1,72 @@
-# MobiAnon: Mobility Privacy Demonstrator
+# MobiAnon — Interactive Mobility Privacy Demonstrator
 
-MobiAnon is a full-stack React, Express, and MySQL demonstrator for exploring explainable privacy protection on point-to-point mobility trip data. It compares original trip records with anonymized releases and reports privacy/utility metrics such as k-violations, l-diversity violations, suppression, spatial error, density similarity, hotspot overlap, and backend timing.
+**Master's Thesis & Independent Software Development**  
+**Developer:** Haris Mustafa  
+**University:** University of Bamberg  
+**Degree:** M.Sc. International Software Systems Science
 
-The project is designed as a research/demo tool, not a production anonymization framework. Its main goal is to make privacy-utility tradeoffs visible through maps, controls, metrics, upload workflows, sample data, benchmark scripts, and an interactive 3D privacy-utility landscape.
+## Overview
 
-The project supports:
+MobiAnon is a full-stack research application designed to
+explore the privacy–utility trade-off in mobility data.
 
-- Original vs anonymized map comparison.
-- Spatial and spatio-temporal k-anonymity.
-- Temporal privacy modes: spatial-only, day, period, and hour.
-- Optional l-diversity for rider type, bike type, destination area, gender, and age band.
-- Optional epsilon-DP-style Laplace noise on released centroids and counts.
-- Multi-k comparison for selected k values.
-- Upload of Citi Bike, Divvy, Hubway/Bluebikes-style, or similar mobility CSV files.
-- Global latitude/longitude validation instead of NYC-only uploads.
-- Resumable 5,000-row chunk upload with retry.
-- Clear-all-user-data workflow with streamed delete progress.
-- Downloadable minimal, Divvy, Citi Bike, and Hubway sample CSVs.
-- Optional Hubway-style metadata: `tripduration`, `bike_id`, `gender`, `birth_year`, and derived `age_band`.
-- Dynamic data-source bounds and date ranges for uploaded datasets.
-- Light/dark UI themes for demos and screenshots.
-- Interactive 3D privacy-utility landscape for k-anonymity, l-diversity, and epsilon-DP scenarios.
-- Benchmark scripts and paper-ready report/figure generation.
-- Suppression-only and fixed-grid baseline comparison against the merge-nearest anonymization method.
+It provides interactive geographic visualizations of
+original and anonymized trip data, configurable privacy
+techniques, quantitative utility metrics, and benchmark
+tools for evaluating anonymization approaches.
+
+The application was independently designed, implemented,
+and extended by Haris Mustafa, originating from his
+Master's thesis at the University of Bamberg.
+
+## Academic Background
+
+The original Master's thesis investigated how
+interactive visualizations can help users understand
+spatial k-anonymity and the relationship between
+location privacy and data utility.
+
+The thesis included a user study with 16 participants.
+
+The software was subsequently extended with:
+
+- Spatial and spatio-temporal k-anonymity
+- Configurable l-diversity
+- Experimental Laplace-based noise mechanisms
+- Interactive privacy–utility comparisons
+- CSV dataset upload and management
+- Multiple mobility dataset formats
+- Automated benchmarking and evaluation
+- Interactive 3D privacy–utility visualization
+
+All software implementation and extensions in this
+repository were developed by Haris Mustafa.
+
+## Research Publication
+
+**Title:** MobiAnon: An Interactive Demonstrator for
+Exploring the Privacy–Utility Trade-off in Mobility Data
+
+**Authors:**
+- Muhammad Tayyab Shafique
+- Haris Mustafa
+- Abeera Ayesha Riaz
+
+**Conference:** SKILL 2026, Dresden, Germany
+
+The research paper is a collaborative academic
+publication with three authors. Software development
+and publication authorship are distinct contributions.
+
+## Technology Stack
+
+- Frontend: React, JavaScript, Vite, Leaflet
+- Backend: Node.js, Express.js
+- Database: MySQL
+- Data Processing: CSV import and validation
+- Privacy Methods: k-anonymity, l-diversity,
+  experimental Laplace-based noise
+- Evaluation: Privacy/utility metrics and benchmarks
 
 ## Visual Overview
 
