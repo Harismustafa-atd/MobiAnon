@@ -19,19 +19,22 @@ const laplaceSample = (scale) => {
 };
 
 /**
- * Apply Laplace noise to the centroids and counts of k-anonymous groups.
+   
+* Experimental Laplace-based noise for mobility data.
  *
- * Privacy accounting:
- *   - Location (lat / lng): global sensitivity = gridSize degrees.
- *     One trip can shift a centroid by at most one full grid cell.
- *     → Laplace scale = gridSize / ε
- *   - Count: global sensitivity = 1 (one trip changes count by exactly 1).
- *     → Laplace scale = 1 / ε
+ * Adds random noise to released group centroids and counts.
  *
- * This is applied as a post-processing step after k-anonymization so the
- * k-anonymity guarantee is preserved and DP adds an additional semantic layer.
- * The composition theorem means the combined mechanism satisfies (ε, 0)-DP
- * on top of the k-anonymity structural guarantee.
+ * This mechanism is intended to demonstrate how noise
+ * affects geographic utility and released statistics.
+ *
+ * IMPORTANT:
+ * This is not a formally verified end-to-end
+ * differential privacy implementation.
+ *
+ * Sensitivity assumptions, data-dependent grouping,
+ * repeated queries, and privacy budget composition
+ * require additional mathematical analysis.
+
  */
 const applyDPNoise = (groups, epsilon, gridSize) => {
   if (!Number.isFinite(epsilon) || epsilon <= 0) {
@@ -557,10 +560,21 @@ const buildAnonymizationResponse = ({
     };
   });
 
-  const groupSizes = anonymizedTrips.map((g) => g.count);
-  const releasedRecords = groupSizes.reduce((sum, c) => sum + c, 0);
+
+  // Actual group sizes are used for internal validation.
+  // Noisy counts are kept separately for visualization.
+  const actualGroupSizes = anonymizedGroups.map(
+    (group) => group.trips.length
+  );
+
+  const releasedRecords = actualGroupSizes.reduce(
+    (sum, size) => sum + size,
+    0
+  );
+
   const totalSpatialError = anonymizedTrips.reduce(
-    (sum, g) => sum + g.spatialErrorMeanKm * g.count,
+    (sum, group, index) =>
+      sum + group.spatialErrorMeanKm * actualGroupSizes[index],
     0
   );
   const rawDensity = buildDensityMap(
@@ -609,10 +623,13 @@ const buildAnonymizationResponse = ({
       suppressedRecords: suppressedTrips.length,
       suppressionRate: suppressedTrips.length / validTrips.length,
       outputGroups: anonymizedTrips.length,
-      minGroupSize: Math.min(...groupSizes),
-      maxGroupSize: Math.max(...groupSizes),
+           // Validate actual group sizes, not noisy released counts.
+      minGroupSize: Math.min(...actualGroupSizes),
+      maxGroupSize: Math.max(...actualGroupSizes),
       avgGroupSize: releasedRecords / anonymizedTrips.length,
-      kViolations: anonymizedTrips.filter((g) => g.count < k).length,
+      kViolations: actualGroupSizes.filter(
+        (size) => size < k
+      ).length,
       avgSpatialErrorKm: totalSpatialError / releasedRecords,
       maxSpatialErrorKm: Math.max(...anonymizedTrips.map((g) => g.spatialErrorMaxKm)),
       pointReductionRatio: 1 - anonymizedTrips.length / validTrips.length,
@@ -720,9 +737,9 @@ export const applyKAnonymity = async (trips, k, options = {}) => {
     );
   });
 
-  // Apply ε-DP noise to released centroids as a post-processing step.
-  // k-anonymity provides the structural guarantee (group size ≥ k);
-  // ε-DP adds a semantic probabilistic guarantee on top via Laplace noise.
+// Apply experimental Laplace noise to released groups.
+// Actual group membership remains unchanged.
+// No formal end-to-end DP guarantee is claimed.
   const { noisyGroups, dpStats } = applyDPNoise(anonymizedGroups, epsilon, gridSize);
 
   return buildAnonymizationResponse({
