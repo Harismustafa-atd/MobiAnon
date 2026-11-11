@@ -73,7 +73,7 @@ const deriveAgeBand = (birthYearRaw, startedAt) => {
 };
 
 const normalizeColumnName = (value) =>
-  value?.replace(/^﻿/, '').trim().toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
+  value?.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
 
 const getAliasedValue = (row, field) => {
   const normalizedRow = Object.fromEntries(

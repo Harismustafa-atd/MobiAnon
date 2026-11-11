@@ -1,6 +1,6 @@
 /** Interactive SVG privacy-utility landscape with animated bars, tooltips, and pin-to-compare. */
 
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { Select, Segmented, Space, Tag, Typography } from "antd";
 import {
   SafetyOutlined, NodeIndexOutlined, ClusterOutlined,
@@ -348,7 +348,14 @@ const PrivacyLandscape = ({
     };
 
     animRef.current.frameId = requestAnimationFrame(tick);
-    return () => { if (animRef.current.frameId) cancelAnimationFrame(animRef.current.frameId); };
+
+const animationState = animRef.current;
+
+return () => {
+  if (animationState.frameId) {
+    cancelAnimationFrame(animationState.frameId);
+  }
+};
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metricKey, mode]);
 

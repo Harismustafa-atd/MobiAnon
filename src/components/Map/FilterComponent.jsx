@@ -65,10 +65,24 @@ export const FilterComponent = ({
     ? selectedDate
     : dateBounds?.min ?? dayjs("2024-01-01");
 
-  React.useEffect(() => {
-    if (!dateBounds || !filterState.date || selectedDateInBounds) return;
-    applyState({ ...filterState, date: dateBounds.min.format("YYYY-MM-DD") });
-  }, [dateBounds, filterState, selectedDateInBounds]);
+ React.useEffect(() => {
+  if (!dateBounds || !filterState.date || selectedDateInBounds) return;
+
+  const next = {
+    ...filterState,
+    date: dateBounds.min.format("YYYY-MM-DD"),
+  };
+
+  setFilterState(next);
+  setAnonymizedFilterState(next);
+}, [
+  dateBounds,
+  filterState,
+  selectedDateInBounds,
+  setFilterState,
+  setAnonymizedFilterState,
+]);
+
 
   const disabledDate = (current) => {
     if (!current) return true;

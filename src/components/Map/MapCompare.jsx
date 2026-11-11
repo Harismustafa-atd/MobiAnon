@@ -73,16 +73,54 @@ function SyncView({ center, zoom }) {
   return null;
 }
 
-const GridOverlay = ({ gridSize }) => {
+
+const createGridLines = (bounds, gridSize) => {
+  const lines = [];
+
+  for (
+    let lat = bounds.getSouth();
+    lat <= bounds.getNorth();
+    lat += gridSize
+  ) {
+    lines.push([
+      [lat, bounds.getWest()],
+      [lat, bounds.getEast()],
+    ]);
+  }
+
+  for (
+    let lng = bounds.getWest();
+    lng <= bounds.getEast();
+    lng += gridSize
+  ) {
+    lines.push([
+      [bounds.getSouth(), lng],
+      [bounds.getNorth(), lng],
+    ]);
+  }
+
+  return lines;
+};
+
+function GridOverlay({ gridSize }) {
   const map = useMap();
   const bounds = map.getBounds();
-  const lines = [];
-  for (let lat = bounds.getSouth(); lat <= bounds.getNorth(); lat += gridSize)
-    lines.push([[lat, bounds.getWest()], [lat, bounds.getEast()]]);
-  for (let lng = bounds.getWest(); lng <= bounds.getEast(); lng += gridSize)
-    lines.push([[bounds.getSouth(), lng], [bounds.getNorth(), lng]]);
-  return <>{lines.map((l, i) => <Polyline key={i} positions={l} color="red" weight={1} />)}</>;
-};
+  const lines = createGridLines(bounds, gridSize);
+
+  return (
+    <>
+      {lines.map((line, index) => (
+        <Polyline
+          key={index}
+          positions={line}
+          color="red"
+          weight={1}
+        />
+      ))}
+    </>
+  );
+}
+
 
 const MapEmpty = ({ message }) => (
   <div className="map-empty-state">
@@ -116,7 +154,7 @@ const METRIC_HELP = {
   },
   minGroupSize: {
     title: "Min Group Size",
-    content: "The smallest trip count in any released group. By the k-anonymity guarantee this must always be ≥ k. When ε-DP is active, noisy counts are used — so this value can briefly dip below k on screen even though the true group sizes all satisfy k. It will vary on each fetch because the Laplace mechanism re-samples fresh noise every time.",
+    content: "The smallest actual number of trips in any released group, calculated before optional Laplace noise is added to displayed counts. A valid k-anonymity group contains at least k input trips.",
   },
   avgSpatialErrorKm: {
     title: "Mean Spatial Error",
@@ -148,7 +186,7 @@ const METRIC_HELP = {
   },
   avgCentroidDisplacementKm: {
     title: "Avg Centroid Displacement",
-    content: "Average Euclidean displacement (in km) applied to released centroids by the Laplace mechanism. This is the direct utility cost of ε-DP. Larger displacement = stronger privacy guarantee but more spatial distortion on top of k-anonymity distortion.",
+    content: "Average displacement in km applied to released centroids by the experimental Laplace-noise mechanism. Larger displacements can reduce spatial utility; this demonstrator does not establish a formal end-to-end differential-privacy guarantee.",
   },
   dpLocationScaleKm: {
     title: "Location Noise Scale (λ)",
@@ -160,7 +198,7 @@ const METRIC_HELP = {
   },
   dpEpsilon: {
     title: "Privacy Budget (ε)",
-    content: "The ε parameter of (ε, 0)-differential privacy. Smaller ε = stronger privacy guarantee but more noise. ε ≤ 1 is considered strong; ε ≥ 5 is weak. ε = ∞ disables DP entirely. This tool applies DP as a post-processing step on top of k-anonymity.",
+    content: "Noise parameter for the experimental Laplace mechanism. Smaller ε produces a larger noise scale; ε = ∞ disables noise. This application does not prove end-to-end (ε, 0)-differential privacy or track privacy-budget composition.",
   },
   lViolations: {
     title: "ℓ-Violations",
@@ -608,11 +646,10 @@ const AnonymizedGroupsSummary = ({ summary, filter, originalTotal }) => {
             title="Released Output Profile"
             content={
               <span>
-                Profile of what was actually published after anonymization — how many trips
-                survived, how group sizes are distributed, and how much spatial generalization
-                was applied. Unlike the metric cards above, these values describe the{" "}
-                <strong>structure of the released dataset</strong> rather than the algorithm's
-                quality scores.
+                Summary of anonymized output. When experimental Laplace noise is enabled,
+                group counts, their sum, histogram, and derived coverage figures are
+                noisy estimates—not actual group-membership validation statistics.
+                Exact k-validation metrics are calculated separately in the backend.
               </span>
             }
           />
@@ -622,23 +659,23 @@ const AnonymizedGroupsSummary = ({ summary, filter, originalTotal }) => {
       <Row gutter={[8, 8]} align="stretch">
         <Col xs={8} style={{ display: "flex" }}>
           <div className="baseline-stat">
-            <span className="baseline-label">Trips released</span>
+            <span className="baseline-label">{dpActive ? "Estimated trips (noisy)" : "Trips released"}</span>
             <span className="baseline-value">{tripsReleased.toLocaleString()}</span>
             {dpActive && <span className="baseline-sub">noisy counts (ε-DP)</span>}
           </div>
         </Col>
         <Col xs={8} style={{ display: "flex" }}>
           <div className="baseline-stat">
-            <span className="baseline-label">Coverage of raw data</span>
+            <span className="baseline-label">{dpActive ? "Estimated coverage (noisy)" : "Coverage of raw data"}</span>
             <span className="baseline-value">
-              {coveragePct != null ? `${Math.min(coveragePct, 100).toFixed(1)}%` : "—"}
+              {coveragePct != null ? `${(dpActive ? coveragePct : Math.min(coveragePct, 100)).toFixed(1)}%` : "—"}
             </span>
             {coveragePct == null && <span className="baseline-sub">load original to compare</span>}
           </div>
         </Col>
         <Col xs={8} style={{ display: "flex" }}>
           <div className="baseline-stat">
-            <span className="baseline-label">Avg trips&nbsp;/&nbsp;group</span>
+            <span className="baseline-label">{dpActive ? "Avg noisy count / group" : "Avg trips / group"}</span>
             <span className="baseline-value">{avgTripsPerGroup.toFixed(1)}</span>
             <span className="baseline-sub">median {medianSize} · max {maxSize}</span>
           </div>
@@ -649,9 +686,9 @@ const AnonymizedGroupsSummary = ({ summary, filter, originalTotal }) => {
             <div className="baseline-row-header">
               <Space size={4}>
                 <BarChartOutlined className="baseline-row-icon" />
-                <span className="baseline-label">Group size distribution</span>
+                <span className="baseline-label">{dpActive ? "Noisy count distribution" : "Group size distribution"}</span>
               </Space>
-              <span className="baseline-sub">trips per group (k = {k})</span>
+              <span className="baseline-sub">{dpActive ? "perturbed estimates, not actual group sizes" : `trips per group (k = ${k})`}</span>
             </div>
             <div className="group-size-histogram">
               {histogram.map((b) => (

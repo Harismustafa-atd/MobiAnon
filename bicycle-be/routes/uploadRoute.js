@@ -150,8 +150,7 @@ const parseCSVChunk = (csvText) =>
           separator: ',',
           skipEmptyLines: true,
           trim: true,
-          mapHeaders: ({ header }) => header?.replace(/^﻿/, '').trim(),
-        })
+mapHeaders: ({ header }) => header?.replace(/^\uFEFF/, '').trim(),        })
       )
       .on('headers', (h) => { detectedHeaders = h; })
       .on('data', (row) => rows.push(row))

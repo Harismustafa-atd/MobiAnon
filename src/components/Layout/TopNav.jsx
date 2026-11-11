@@ -1,5 +1,5 @@
-import React from "react";
-import { Segmented, Space } from "antd";
+
+import { Segmented } from "antd";
 import {
   BarChartOutlined,
   BookOutlined,

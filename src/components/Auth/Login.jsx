@@ -107,7 +107,7 @@ const Login = () => {
         </Form>
 
         <div className="auth-footer">
-          <Text type="secondary">Don't have an account?</Text>
+          <Text type="secondary">Don&apos;t have an account?</Text>
           <Button type="link" onClick={() => navigate('/signup')} style={{ padding: '0 4px' }}>
             Sign Up
           </Button>

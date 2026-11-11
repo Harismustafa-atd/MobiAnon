@@ -24,7 +24,7 @@ app.use(express.json());
 app.use('/api', userRoutes);
 app.use('/api/upload', uploadRoutes);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Unhandled Error:', err);
   res.status(500).json({
     status: 'error',
@@ -32,9 +32,6 @@ app.use((err, req, res, next) => {
     error: err.message || 'Unknown error',
   });
 });
-
-console.log('DATABASE_URL APP:', process.env.DATABASE_URL);
-
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import {
   Alert, Button, Card, Col, Descriptions, Progress,
   Row, Space, Switch, Table, Tag, Tooltip, Typography, Upload,
@@ -196,8 +196,7 @@ const CSVUpload = ({ onDataSourceChange }) => {
       .then(r => r.json())
       .then(data => { if (data.status !== 'idle') setDeleteServerStatus(data.status); })
       .catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }, []);
 
   // On mount, restore any unfinished upload session from localStorage.
   useEffect(() => {
@@ -393,7 +392,7 @@ const CSVUpload = ({ onDataSourceChange }) => {
             } else if (event.type === 'error') {
               throw new Error(event.message);
             }
-          } catch (parseErr) {
+          } catch  {
             // Malformed frame — skip silently
           }
         }

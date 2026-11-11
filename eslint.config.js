@@ -1,3 +1,4 @@
+
 import js from '@eslint/js'
 import globals from 'globals'
 import react from 'eslint-plugin-react'
@@ -5,19 +6,27 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist'] },
   {
-    files: ['**/*.{js,jsx}'],
+    ignores: [
+      'dist/**',
+      '**/node_modules/**',
+      'coverage/**',
+      'bicycle-be/uploads/**',
+    ],
+  },
+  {
+    files: ['src/**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: globals.browser,
       parserOptions: {
-        ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
-        sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: {
+      react: { version: 'detect' },
+    },
     plugins: {
       react,
       'react-hooks': reactHooks,
@@ -28,10 +37,32 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
+
+      // This JavaScript project does not use PropTypes.
+      'react/prop-types': 'off',
+
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
+      ],
+    },
+  },
+  {
+    files: [
+      'bicycle-be/**/*.js',
+      'vite.config.js',
+    ],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.node,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      'no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
       ],
     },
   },

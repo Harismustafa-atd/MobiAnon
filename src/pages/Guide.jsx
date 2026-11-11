@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import  { useState, useEffect, useCallback } from "react";
 import {
   Alert, Button, Card, Col, Row, Space, Steps, Table, Tag, Timeline, Tabs, Typography, Tooltip,
 } from "antd";
@@ -53,7 +53,7 @@ const metricRows = [
   { metric: "k Violations",               meaning: "Released groups smaller than k. This should always be 0 because the merge-nearest algorithm merges any undersized group before releasing it." },
   { metric: "Released Groups",            meaning: "Number of distinct anonymized clusters returned. Fewer groups means broader generalization and stronger privacy." },
   { metric: "Suppressed",                 meaning: "Trips withheld because no valid k-anonymous group (and ℓ-diverse group, if enabled) could be formed for them." },
-  { metric: "Mean Error (km)",            meaning: "Average distance between each trip's original start point and the centroid of its released group. Lower values indicate better spatial accuracy." },
+  { metric: "Mean Error (km)",            meaning: "Average distance between each trip&apos;original start point and the centroid of its released group. Lower values indicate better spatial accuracy." },
   { metric: "Density Similarity (Cosine)",meaning: "Cosine similarity between raw and anonymized grid-cell density distributions. Values near 1.0 indicate the anonymized heatmap closely matches the original." },
   { metric: "Density Similarity (JSD)",   meaning: "One minus Jensen-Shannon Divergence. Treats densities as probability distributions and penalises both pattern and magnitude changes. Values closer to 1 are better." },
   { metric: "Hotspot Overlap",            meaning: "Fraction of the top-10 busiest raw grid cells still present after anonymization. A value near 1.0 means major hotspots survived." },
@@ -464,7 +464,7 @@ const STEP_DESCRIPTIONS = {
     "The API passes the raw trips to the Anonymization Engine service.",
     "The engine assigns trips to spatial grid cells and runs merge-nearest k-anonymity.",
     "The engine checks each group for ℓ-diversity and merges non-diverse groups.",
-    "Laplace noise is added to each centroid's lat/lng and count (when ε-DP is enabled).",
+    "Laplace noise is added to each centroid&apos;lat/lng and count (when ε-DP is enabled).",
     "The anonymized centroids and all utility metrics are returned to the API.",
     "The API sends the full JSON response back to the MapCompare component.",
     "MapCompare renders the anonymized markers, heatmap, and the metrics panel.",
@@ -762,7 +762,7 @@ function GettingStartedTab() {
               { title: "Session starts automatically", description: "The uploader fingerprints your file and calls /session/start to get a session ID. If a previous upload was interrupted, the resume banner appears and lets you continue from the last completed chunk." },
               { title: "Chunked transfer with retry",  description: "Your file is split into 5,000-row chunks. Each chunk is posted individually to /session/:id/chunk and retried up to 3 times with exponential backoff on any network error." },
               { title: "Watch the progress bar",       description: "The bar advances chunk by chunk. Once the final chunk lands, CSVUpload calls /session/:id/complete and the server confirms the total rows inserted and duplicates skipped." },
-              { title: "Switch to User Data",          description: "After upload, use the Data Source toggle on the Tool page. The map re-centres automatically and the date picker adjusts to your dataset's date range." },
+              { title: "Switch to User Data",          description: "After upload, use the Data Source toggle on the Tool page. The map re-centres automatically and the date picker adjusts to your dataset&apos;date range." },
             ]} />
           </Card>
         </Col>
@@ -826,7 +826,7 @@ function UsingTheToolTab() {
           <Card title={<Space><ClusterOutlined /> Step-by-Step Workflow</Space>} className="guide-card">
             <Timeline items={[
               { color: "blue",    children: "Choose Preloaded or User Data. Preloaded is January 2024 Citi Bike (NYC); uploaded data can come from any city." },
-              { color: "blue",    children: "Set member type, grid size, k value, and temporal privacy mode. Hover any control's ? icon for an inline explanation." },
+              { color: "blue",    children: "Set member type, grid size, k value, and temporal privacy mode. Hover any control&apos;? icon for an inline explanation." },
               { color: "purple",  children: "Optionally enable ℓ-Diversity and choose a sensitive attribute: rider type, bike type, destination area, or Hubway gender/age band when those optional columns are present. A warning appears if the member type filter conflicts with the chosen attribute." },
               { color: "volcano", children: "Optionally enable ε-DP noise and choose ε. Smaller ε = more noise = stronger privacy but larger centroid displacement." },
               { color: "green",   children: "Click Load Original to inspect raw trip paths, then Run Anonymization to generate released centroids and heat intensity." },
@@ -856,7 +856,11 @@ function UsingTheToolTab() {
               </div>
               <div className="guide-control-row">
                 <Tag color="orange" icon={<NodeIndexOutlined />}>ε-DP Noise</Tag>
-                <Text>Adds calibrated Laplace noise to centroids and counts. Provides a formal (ε, 0)-differential privacy guarantee on top of k-anonymity's structural guarantee.</Text>
+                <Text>
+  Adds experimental Laplace-based noise to released centroids and counts
+  to demonstrate privacy–utility trade-offs. No formal end-to-end
+  differential privacy guarantee is claimed.
+</Text>
               </div>
               <div className="guide-control-row">
                 <Tag color="magenta">3D Landscape</Tag>
@@ -905,7 +909,7 @@ function PrivacyTab() {
                   This tool implements a <strong>merge-nearest</strong> strategy: trips are first assigned to
                   grid cells. Any cell with fewer than k trips is merged with its nearest neighbour
                   (by centroid distance) until the group reaches k. The released value is the centroid
-                  of the merged group, never revealing an individual trip's coordinates.
+                  of the merged group, never revealing an individual trip&apos;s coordinates.
                 </Paragraph>
                 <Paragraph>
                   <strong>Zero k-violations are guaranteed</strong>: the algorithm never releases a group
@@ -971,14 +975,14 @@ function PrivacyTab() {
                   <strong>Differential privacy</strong> (Dwork, 2006) provides a <em>semantic</em> privacy guarantee:
                   an adversary with arbitrary background knowledge cannot determine with high confidence
                   whether any individual trip contributed to the output. This is stronger than
-                  k-anonymity's structural guarantee.
+                  k-anonymity&apos;structural guarantee.
                 </Paragraph>
                 <Paragraph>
                   This tool implements the <strong>Laplace mechanism</strong> as a post-processing step on k-anonymous centroids:
                 </Paragraph>
                 <ul style={{ paddingLeft: 18, marginBottom: 12 }}>
-                  <li><Text><strong>Location noise:</strong> Laplace(0, gridSize / ε) degrees added to each centroid's lat and lng independently.</Text></li>
-                  <li><Text><strong>Count noise:</strong> Laplace(0, 1 / ε) added to each released group's count, clamped to ≥ 1.</Text></li>
+                  <li><Text><strong>Location noise:</strong> Laplace(0, gridSize / ε) degrees added to each centroid&apos;lat and lng independently.</Text></li>
+                  <li><Text><strong>Count noise:</strong> Laplace(0, 1 / ε) added to each released group&apos;count, clamped to ≥ 1.</Text></li>
                 </ul>
                 <Table size="small" pagination={false} dataSource={epsilonRows} rowKey="eps"
                   columns={[
@@ -992,7 +996,7 @@ function PrivacyTab() {
                   <Text strong style={{ color: "#f97316" }}>Syntactic vs. Semantic</Text>
                   <Paragraph style={{ marginTop: 8, marginBottom: 0 }}>
                     <strong>k-anonymity + ℓ-diversity</strong> are <em>syntactic</em> methods that make
-                    structural guarantees about released groups but cannot bound an adversary's inference gain.
+                    structural guarantees about released groups but cannot bound an adversary&apos;inference gain.
                   </Paragraph>
                   <Paragraph style={{ marginTop: 8, marginBottom: 0 }}>
                     <strong>ε-DP</strong> is a <em>semantic</em> method that bounds the posterior probability
@@ -1438,7 +1442,7 @@ function AlgorithmsTab() {
                 <Text strong style={{ display: "block", marginBottom: 8 }}>How it works</Text>
                 <Paragraph>
                   After k-anonymity (and optional ℓ-diversity), <strong>Laplace noise</strong> is added
-                  independently to each released centroid's latitude, longitude, and group count.
+                  independently to each released centroid&apos;latitude, longitude, and group count.
                   The noise scale is calibrated to the <strong>global sensitivity</strong> of each
                   statistic divided by the privacy budget ε.
                 </Paragraph>
@@ -1585,7 +1589,7 @@ function SequenceTab() {
                     style={{ marginTop: 8 }}
                   >
                     <Paragraph type="secondary" style={{ marginBottom: 12 }}>
-                      What happens when a user clicks "Run Anonymization", tracing the full path from the frontend controls
+                      What happens when a user clicks &quot;Run Anonymization&quot;, tracing the full path from the frontend controls
                       all the way through the k-anonymity / ℓ-diversity / ε-DP pipeline and back.
                     </Paragraph>
                     <SequenceDiagram

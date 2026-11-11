@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Space, Typography } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import CSVUpload from '../components/Upload/CSVUpload';
